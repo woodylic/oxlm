@@ -1,11 +1,12 @@
 package com.github.woodylic.oxlrm;
 
+import com.github.woodylic.oxlrm.core.ExcelReader;
 import com.github.woodylic.oxlrm.core.KVMapper;
 import com.github.woodylic.oxlrm.core.TableMapper;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.*;
 import java.security.InvalidParameterException;
@@ -13,46 +14,41 @@ import java.util.List;
 
 public class OXlRMapper {
 
-    private InputStream inputStream;
+    private OPCPackage opcPackage;
     private Workbook workbook;
 
-    private OXlRMapper(InputStream inputStream, Workbook workbook) {
-        this.inputStream = inputStream;
+    private KVMapper kvMapper;
+    private TableMapper tableMapper;
+
+    private OXlRMapper(OPCPackage opcPackage, Workbook workbook) {
+        this.opcPackage = opcPackage;
         this.workbook = workbook;
+
+        kvMapper = new KVMapper(workbook);
+        tableMapper = new TableMapper(workbook);
     }
 
-    public static OXlRMapper open(String xlFilePath) throws IOException {
-
+    public static OXlRMapper open(String xlFilePath) throws IOException, InvalidFormatException {
         String extension = xlFilePath.substring(xlFilePath.lastIndexOf("."));
-        if(!extension.equals(".xls") && !extension.equals(".xlsx"))
-            throw new InvalidParameterException("Only .xls and .xlsx file are supported.");
+        if(!extension.equals(".xlsx"))
+            throw new InvalidParameterException("Only .xlsx file are supported.");
 
-        InputStream inputStream = new FileInputStream(xlFilePath);
+        File file = new File(xlFilePath);
+        OPCPackage opcPackage = OPCPackage.open(file);
 
-        if (extension.equals(".xls"))
-            return new OXlRMapper(inputStream, new HSSFWorkbook(inputStream));
-        else
-            return new OXlRMapper(inputStream, new XSSFWorkbook(inputStream));
+        return new OXlRMapper(opcPackage, new XSSFWorkbook(opcPackage));
     }
 
-    public <T> T getKVData(Class type) {
-        return new KVMapper().getKVData(type);
+    public <T> T getKVData(Class entityType) {
+        return kvMapper.getKVData(entityType);
     }
 
-    public <T> List<T> leData(Class type) {
-        return new TableMapper().getTableData(type);
+    public <T> List<T> getTableData(Class entityType) {
+        return tableMapper.getTableData(entityType);
     }
 
     public void close() throws Exception {
-
-        if(inputStream == null)
-            return;
-
-        try{
-            inputStream.close();
-        } catch (Exception e) {
-            inputStream = null;
-            throw e;
-        }
+        if(opcPackage != null)
+            opcPackage.close();
     }
 }
