@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.woodylic</groupId>
-  <artifactId>oxlm</artifactId>
+  <artifactId>oxlrm</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>oxlm</name>
-  <url>http://maven.apache.org</url>
+  <name>Object Excel-Range Mapper</name>
+  <url>https://github.com/woodylic/oxlrm</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

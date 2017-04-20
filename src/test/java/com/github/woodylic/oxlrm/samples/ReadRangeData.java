@@ -1,6 +1,5 @@
 package com.github.woodylic.oxlrm.samples;
 
-import com.github.woodylic.oxlrm.exceptions.OXlMException;
 import com.google.common.io.Resources;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -11,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.Locale;
 
 public class ReadRangeData {
@@ -78,14 +78,14 @@ public class ReadRangeData {
             Row row = sheet.getRow(startRow + i);
             for (int j = 0; j < cols; j++) {
                 Cell cell = row.getCell(startCol + j);
-                result[i][j] = cell.getStringCellValue();
+                result[i][j] = formatter.formatCellValue(cell);
             }
         }
 
         return result;
     }
 
-    private static Workbook openWorkbook(String filePath) throws IOException, OXlMException {
+    private static Workbook openWorkbook(String filePath) throws IOException, InvalidParameterException {
 
         String extension = filePath.substring(filePath.lastIndexOf("."));
         InputStream inputStream = new FileInputStream(filePath);
@@ -98,6 +98,6 @@ public class ReadRangeData {
             return new XSSFWorkbook(inputStream);
         }
 
-        throw new OXlMException(String.format("filePath %s is invalid.", filePath));
+        throw new InvalidParameterException(String.format("filePath %s is invalid.", filePath));
     }
 }
