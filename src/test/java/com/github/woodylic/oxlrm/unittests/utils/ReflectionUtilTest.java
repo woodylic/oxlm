@@ -1,5 +1,6 @@
 package com.github.woodylic.oxlrm.unittests.utils;
 
+import com.github.woodylic.oxlrm.utils.ReflectionUtil;
 import com.github.woodylic.oxlrm.unittests.entities.EntityWithFields;
 import com.github.woodylic.oxlrm.unittests.entities.EntityWithRange;
 import com.github.woodylic.oxlrm.unittests.entities.EntityWithoutRange;

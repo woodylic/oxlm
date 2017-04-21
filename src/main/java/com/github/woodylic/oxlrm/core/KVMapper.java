@@ -1,10 +1,10 @@
 package com.github.woodylic.oxlrm.core;
 
-import com.github.woodylic.oxlrm.unittests.utils.ReflectionUtil;
+import com.github.woodylic.oxlrm.utils.MappingUtil;
+import com.github.woodylic.oxlrm.utils.ReflectionUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class KVMapper {
 
@@ -22,14 +22,12 @@ public class KVMapper {
         String rangeName = ReflectionUtil.getRangeName(entityClass);
 
         //根据rangeName获得数据数组。
-        excelReader.getRangeData(rangeName);
+        String[][] sourceData = excelReader.getRangeData(rangeName);
 
         //遍历获得entityType所有field的Field annotation或字段名，作为column header。
-        HashMap<String, String> labelsNames = ReflectionUtil.getLabelsNames(entityClass);
+        Map<String, String> labelsNames = ReflectionUtil.getLabelsNames(entityClass);
 
-        //把数组赋值给entityType result。
-        Object result = entityClass.newInstance();
-
-        return null;
+        //返回映射结果
+        return MappingUtil.getKVData(entityClass, labelsNames, sourceData);
     }
 }
