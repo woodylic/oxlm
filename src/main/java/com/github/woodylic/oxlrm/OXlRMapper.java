@@ -40,7 +40,8 @@ public class OXlRMapper {
     }
 
     public <T> T getKVData(Class entityType) {
-        return kvMapper.getKVData(entityType);
+        return null;
+        //return kvMapper.getKVData(entityType);
     }
 
     public <T> List<T> getTableData(Class entityType) {

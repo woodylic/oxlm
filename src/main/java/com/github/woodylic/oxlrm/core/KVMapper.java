@@ -1,8 +1,9 @@
 package com.github.woodylic.oxlrm.core;
 
-import com.github.woodylic.oxlrm.utils.ReflectionUtil;
+import com.github.woodylic.oxlrm.unittests.utils.ReflectionUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class KVMapper {
@@ -16,6 +17,7 @@ public class KVMapper {
     }
 
     public <T> T getKVData(Class entityClass) throws IllegalAccessException, InstantiationException {
+
         //获得entityType的Range annotation或类名，作为数据源的rangeName。
         String rangeName = ReflectionUtil.getRangeName(entityClass);
 
@@ -23,9 +25,11 @@ public class KVMapper {
         excelReader.getRangeData(rangeName);
 
         //遍历获得entityType所有field的Field annotation或字段名，作为column header。
-        List<String> headers = ReflectionUtil.getLabelsNames(entityClass);
+        HashMap<String, String> labelsNames = ReflectionUtil.getLabelsNames(entityClass);
 
         //把数组赋值给entityType result。
         Object result = entityClass.newInstance();
+
+        return null;
     }
 }
